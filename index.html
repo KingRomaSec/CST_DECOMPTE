@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Décompte du Pèlerinage de la Nativité – Sèmè, 24-25 décembre. Église du Christianisme Céleste.">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Décompte – Pèlerinage de la Nativité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c3a8e;--blue:#2780c6;--sky:#a8dcec;--sand:#f3dca8;--ink:#14285f;--soft:#4a6aa8}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{font-family:"Outfit",system-ui,sans-serif;color:var(--ink)}
+  body.idle{cursor:none}
+
+  body{background:radial-gradient(ellipse 120% 60% at 50% 115%,rgba(243,220,168,.75) 0%,rgba(243,220,168,0) 60%),linear-gradient(180deg,#eaf6fb 0%,#fff 55%,#fdf8ee 100%)}
+  main{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2vh 2.5vw}
+  .logo{height:min(33vh,40vw);width:auto;display:block}
+  .church{display:none}
+  h1{position:absolute;left:-9999px}
+  .dates{display:inline-block;margin-top:1.4vh;font-size:min(3.6vh,3vw);font-weight:600;color:#fff;background:var(--blue);border-radius:999px;padding:.3em 1.1em;letter-spacing:.03em}
+  #countdown{width:100%}
+  .grid{display:flex;justify-content:center;gap:1.6vw;margin:2.6vh 0 1.8vh}
+  .unit{flex:1 1 0;max-width:23vw;padding:1.6vh 0 1.8vh;background:#fff;border:3px solid rgba(39,128,198,.3);border-radius:min(2.4vh,2vw);box-shadow:0 1vh 3vh rgba(28,58,142,.12)}
+  .num{font-weight:800;color:var(--navy);line-height:1;font-size:min(29vh,15.5vw);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .lbl{margin-top:.6vh;font-size:min(3.4vh,2.3vw);font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
+  .msg{font-size:min(3.6vh,2.6vw);font-weight:400;color:var(--soft);min-height:1.3em}
+  .welcome{font-weight:800;color:var(--navy);line-height:1.1;font-size:min(13vh,8vw);margin:6vh 0 3vh}
+  @media (orientation:portrait){.logo{height:auto;width:70vw}.grid{flex-wrap:wrap;gap:3vw}.unit{flex:0 0 44vw;max-width:44vw}.num{font-size:30vw}.lbl{font-size:4vw}}
+  /* Controls */
+  .ctrl{position:fixed;right:18px;bottom:18px;z-index:2;display:flex;gap:10px;transition:opacity .4s}
+  body.idle .ctrl{opacity:0;pointer-events:none}
+  .ctrl button{
+    font:600 15px "Outfit",sans-serif;color:var(--navy);
+    background:rgba(255,255,255,.85);border:1px solid rgba(28,58,142,.25);
+    border-radius:10px;padding:10px 16px;cursor:pointer;
+  }
+  .ctrl button:hover{background:#fff}
+  dialog{
+    margin:auto;border:none;border-radius:16px;padding:28px;width:min(460px,92vw);
+    background:#fff;color:var(--ink);text-align:left;font-family:"Outfit",sans-serif;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+  }
+  dialog::backdrop{background:rgba(10,25,60,.45)}
+  dialog h2{font-size:20px;margin-bottom:16px;color:var(--navy)}
+  dialog label{display:block;font-size:14px;color:var(--soft);margin:12px 0 4px}
+  dialog input{
+    width:100%;padding:10px;border-radius:8px;border:1px solid #c9d6ee;
+    background:#f7faff;color:var(--ink);font:16px "Outfit",sans-serif;
+  }
+  dialog .hint{font-size:13px;color:var(--soft);margin-top:8px}
+  dialog .row{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+  dialog button{
+    font:600 15px "Outfit",sans-serif;padding:10px 16px;border-radius:8px;cursor:pointer;
+    border:1px solid #c9d6ee;background:#fff;color:var(--navy);
+  }
+  dialog button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" alt="Sèmè 26 – Pèlerinage de la Nativité" src="logo.png">
+  <div class="church" id="church"></div>
+  <h1 id="title"></h1>
+  <div class="dates" id="dates"></div>
+  <div id="countdown">
+    <div class="grid">
+      <div class="unit"><div class="num" id="d">--</div><div class="lbl">Jours</div></div>
+      <div class="unit"><div class="num" id="h">--</div><div class="lbl">Heures</div></div>
+      <div class="unit"><div class="num" id="m">--</div><div class="lbl">Minutes</div></div>
+      <div class="unit"><div class="num" id="s">--</div><div class="lbl">Secondes</div></div>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+  <div id="live" hidden>
+    <div class="welcome">Le pèlerinage a commencé</div>
+    <div class="msg">Soyez les bienvenus à Sèmè. Que la paix du Seigneur soit avec vous.</div>
+  </div>
+</main>
+
+<div class="ctrl">
+  <button id="btnSettings" type="button">Réglages</button>
+  <button id="btnFull" type="button">Plein écran</button>
+</div>
+
+<dialog id="dlg">
+  <form id="form">
+    <h2>Réglages de l'affichage</h2>
+    <label for="fChurch">Ligne du haut</label>
+    <input id="fChurch" type="text">
+    <label for="fTitle">Titre</label>
+    <input id="fTitle" type="text">
+    <label for="fPlace">Lieu</label>
+    <input id="fPlace" type="text">
+    <label for="fTime">Heure d'ouverture le 24 décembre (heure du Bénin)</label>
+    <input id="fTime" type="time">
+    <p class="hint">Après le 25 décembre, le décompte repart automatiquement vers l'année suivante.</p>
+    <div class="row">
+      <button type="button" id="btnReset">Valeurs par défaut</button>
+      <button type="button" id="btnCancel">Annuler</button>
+      <button type="submit" class="primary">Enregistrer</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  var DEFAULTS = {
+    church: "Église du Christianisme Céleste",
+    title: "Pèlerinage de la Nativité",
+    place: "Sèmè",
+    time: "00:00"
+  };
+  var KEY = "ecc-seme-countdown-v2";
+  function load(){
+    try{ var raw = localStorage.getItem(KEY); if(raw) return Object.assign({}, DEFAULTS, JSON.parse(raw)); }catch(e){}
+    return Object.assign({}, DEFAULTS);
+  }
+  function save(o){ try{ localStorage.setItem(KEY, JSON.stringify(o)); }catch(e){} }
+  var cfg = load();
+
+  // Benin time: UTC+1, no daylight saving
+  var OFFSET_MS = 3600000;
+  function beninYear(now){ return new Date(now + OFFSET_MS).getUTCFullYear(); }
+  function startOf(y){
+    var p = (cfg.time || "00:00").split(":");
+    return Date.UTC(y, 11, 24, parseInt(p[0],10)||0, parseInt(p[1],10)||0) - OFFSET_MS;
+  }
+  function endOf(y){ return Date.UTC(y, 11, 26, 0, 0) - OFFSET_MS; }
+
+  var $ = function(id){ return document.getElementById(id); };
+  var pad = function(n){ return n < 10 ? "0"+n : ""+n; };
+  var lastState = null;
+
+  function render(){
+    var now = Date.now(), y = beninYear(now);
+    var start = startOf(y), end = endOf(y);
+    if(now >= end){ y += 1; start = startOf(y); end = endOf(y); }
+
+    $("church").textContent = cfg.church;
+    $("title").textContent = cfg.title;
+    $("dates").textContent = "24 – 25 décembre " + y + (cfg.place ? "  ·  " + cfg.place : "");
+
+    var live = now >= start && now < end;
+    if(live !== lastState){
+      $("countdown").hidden = live; $("live").hidden = !live; lastState = live;
+    }
+    if(live) return;
+
+    var diff = Math.max(0, start - now);
+    var d = Math.floor(diff / 86400000),
+        h = Math.floor(diff % 86400000 / 3600000),
+        m = Math.floor(diff % 3600000 / 60000),
+        s = Math.floor(diff % 60000 / 1000);
+    $("d").textContent = d; $("h").textContent = pad(h);
+    $("m").textContent = pad(m); $("s").textContent = pad(s);
+
+    $("msg").textContent =
+      d === 0 ? "C'est aujourd'hui !" :
+      d === 1 ? "C'est demain !" :
+      d <= 7  ? "Plus qu'une semaine. Préparons nos cœurs." :
+                "Préparons-nous à nous retrouver à Sèmè.";
+  }
+  render();
+  setInterval(render, 250);
+
+  // Fullscreen + keep the screen awake
+  var wakeLock = null;
+  function keepAwake(){
+    try{ if("wakeLock" in navigator) navigator.wakeLock.request("screen").then(function(l){ wakeLock = l; }).catch(function(){}); }catch(e){}
+  }
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "visible" && wakeLock) keepAwake();
+  });
+  $("btnFull").addEventListener("click", function(){
+    keepAwake();
+    try{
+      var el = document.documentElement;
+      if(!document.fullscreenElement){
+        var p = (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
+        if(p && p.catch) p.catch(function(){});
+      } else if(document.exitFullscreen){ document.exitFullscreen().catch(function(){}); }
+    }catch(e){}
+  });
+
+  // Hide cursor and buttons when idle
+  var idleT;
+  function wake(){
+    document.body.classList.remove("idle"); clearTimeout(idleT);
+    idleT = setTimeout(function(){ document.body.classList.add("idle"); }, 4000);
+  }
+  ["mousemove","keydown","touchstart","click"].forEach(function(ev){ document.addEventListener(ev, wake, {passive:true}); });
+  wake();
+
+  // Settings
+  var dlg = $("dlg");
+  function fill(o){ $("fChurch").value=o.church; $("fTitle").value=o.title; $("fPlace").value=o.place; $("fTime").value=o.time; }
+  $("btnSettings").addEventListener("click", function(){ fill(cfg); dlg.showModal(); });
+  $("btnCancel").addEventListener("click", function(){ dlg.close(); });
+  $("btnReset").addEventListener("click", function(){ fill(DEFAULTS); });
+  $("form").addEventListener("submit", function(e){
+    e.preventDefault();
+    cfg = {
+      church: $("fChurch").value.trim() || DEFAULTS.church,
+      title:  $("fTitle").value.trim()  || DEFAULTS.title,
+      place:  $("fPlace").value.trim(),
+      time:   $("fTime").value || DEFAULTS.time
+    };
+    save(cfg); lastState = null; render(); dlg.close();
+  });
+})();
+</script>
+</body>
+</html>
