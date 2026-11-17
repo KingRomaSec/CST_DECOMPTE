@@ -18,32 +18,33 @@
 
   body{background:radial-gradient(ellipse 120% 60% at 50% 115%,rgba(243,220,168,.75) 0%,rgba(243,220,168,0) 60%),linear-gradient(180deg,#eaf6fb 0%,#fff 55%,#fdf8ee 100%)}
   main{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2vh 2.5vw}
-  .logo{height:min(33vh,40vw);width:auto;display:block}
+  .logo{height:33vh;height:min(33vh,40vw);width:auto;display:block}
   .church{display:none}
   h1{position:absolute;left:-9999px}
-  .dates{display:inline-block;margin-top:1.4vh;font-size:min(3.6vh,3vw);font-weight:600;color:#fff;background:var(--blue);border-radius:999px;padding:.3em 1.1em;letter-spacing:.03em}
+  .dates{display:inline-block;margin-top:1.4vh;font-size:3.6vh;font-size:min(3.6vh,3vw);font-weight:600;color:#fff;background:var(--blue);border-radius:999px;padding:.3em 1.1em;letter-spacing:.03em}
   #countdown{width:100%}
-  .grid{display:flex;justify-content:center;gap:1.6vw;margin:2.6vh 0 1.8vh}
-  .unit{flex:1 1 0;max-width:23vw;padding:1.6vh 0 1.8vh;background:#fff;border:3px solid rgba(39,128,198,.3);border-radius:min(2.4vh,2vw);box-shadow:0 1vh 3vh rgba(28,58,142,.12)}
-  .num{font-weight:800;color:var(--navy);line-height:1;font-size:min(29vh,15.5vw);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-  .lbl{margin-top:.6vh;font-size:min(3.4vh,2.3vw);font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
-  .msg{font-size:min(3.6vh,2.6vw);font-weight:400;color:var(--soft);min-height:1.3em}
-  .welcome{font-weight:800;color:var(--navy);line-height:1.1;font-size:min(13vh,8vw);margin:6vh 0 3vh}
-  @media (orientation:portrait){.logo{height:auto;width:70vw}.grid{flex-wrap:wrap;gap:3vw}.unit{flex:0 0 44vw;max-width:44vw}.num{font-size:30vw}.lbl{font-size:4vw}}
+  .grid{display:flex;justify-content:center;margin:2.6vh 0 1.8vh}
+  .unit{flex:1 1 0;margin:0 .8vw;max-width:23vw;padding:1.6vh 0 1.8vh;background:#fff;border:3px solid rgba(39,128,198,.3);border-radius:2.4vh;border-radius:min(2.4vh,2vw);box-shadow:0 1vh 3vh rgba(28,58,142,.12)}
+  .num{font-weight:800;color:var(--navy);line-height:1;font-size:29vh;font-size:min(29vh,15.5vw);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .lbl{margin-top:.6vh;font-size:3.4vh;font-size:min(3.4vh,2.3vw);font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
+  .msg{font-size:3.6vh;font-size:min(3.6vh,2.6vw);font-weight:400;color:var(--soft);min-height:1.3em}
+  .welcome{font-weight:800;color:var(--navy);line-height:1.1;font-size:13vh;font-size:min(13vh,8vw);margin:6vh 0 3vh}
+  @media (orientation:portrait){.logo{height:auto;width:70vw}.grid{flex-wrap:wrap}.unit{flex:0 0 44vw;max-width:44vw;margin:1.5vw}.num{font-size:30vw}.lbl{font-size:4vw}}
   /* Controls */
-  .ctrl{position:fixed;right:18px;bottom:18px;z-index:2;display:flex;gap:10px;transition:opacity .4s}
+  .ctrl{position:fixed;right:18px;bottom:18px;z-index:2;display:flex;transition:opacity .4s}
   body.idle .ctrl{opacity:0;pointer-events:none}
-  .ctrl button{
+  .ctrl button{margin-left:10px;
     font:600 15px "Outfit",sans-serif;color:var(--navy);
     background:rgba(255,255,255,.85);border:1px solid rgba(28,58,142,.25);
     border-radius:10px;padding:10px 16px;cursor:pointer;
   }
   .ctrl button:hover{background:#fff}
   dialog{
-    margin:auto;border:none;border-radius:16px;padding:28px;width:min(460px,92vw);
+    margin:auto;border:none;border-radius:16px;padding:28px;width:460px;width:min(460px,92vw);
     background:#fff;color:var(--ink);text-align:left;font-family:"Outfit",sans-serif;
     box-shadow:0 20px 60px rgba(0,0,0,.25);
   }
+  dialog:not([open]){display:none}
   dialog::backdrop{background:rgba(10,25,60,.45)}
   dialog h2{font-size:20px;margin-bottom:16px;color:var(--navy)}
   dialog label{display:block;font-size:14px;color:var(--soft);margin:12px 0 4px}
@@ -52,8 +53,8 @@
     background:#f7faff;color:var(--ink);font:16px "Outfit",sans-serif;
   }
   dialog .hint{font-size:13px;color:var(--soft);margin-top:8px}
-  dialog .row{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
-  dialog button{
+  dialog .row{display:flex;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+  dialog button{margin-left:10px;
     font:600 15px "Outfit",sans-serif;padding:10px 16px;border-radius:8px;cursor:pointer;
     border:1px solid #c9d6ee;background:#fff;color:var(--navy);
   }
